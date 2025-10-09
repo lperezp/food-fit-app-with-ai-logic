@@ -1,8 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { HeaderComponent } from "../../components/header/header.component";
-import { FoodService } from '../../services/food.service';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { GenAiService } from '../../services/gen-ai.service';
 
 @Component({
   selector: 'app-list-food-page',
@@ -13,7 +12,7 @@ import { Router } from '@angular/router';
 export class ListFoodPageComponent implements OnInit {
   listFood = [];
   isLoading = false;
-  private foodService = inject(FoodService);
+  private genAI = inject(GenAiService);
   private router = inject(Router);
 
   ngOnInit(): void {
@@ -30,10 +29,11 @@ export class ListFoodPageComponent implements OnInit {
     this.isLoading = true;
     this.listFood = [];
 
-    this.foodService.generatedRecipes().subscribe((data) => {
+    this.genAI.generatedRecipes().then((data) => {
+      console.log('SALIDA', data);
+      this.isLoading = false;
       this.listFood = data['recipes'];
       localStorage.setItem('LIST_FOOD', JSON.stringify(this.listFood));
-      this.isLoading = false;
     });
   }
 

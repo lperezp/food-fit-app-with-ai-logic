@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { HeaderComponent } from "../../components/header/header.component";
-import { FoodService } from '../../services/food.service';
 
 @Component({
   selector: 'app-detail-food-page',
@@ -10,7 +9,6 @@ import { FoodService } from '../../services/food.service';
 })
 export class DetailFoodPageComponent {
   detailFood;
-  private foodService = inject(FoodService);
   constructor() {
     const detailFoodString = localStorage.getItem('DETAIL_FOOD');
     this.detailFood = detailFoodString ? JSON.parse(detailFoodString) : null;
@@ -24,8 +22,8 @@ export class DetailFoodPageComponent {
       }
     }
 
-    this.foodService.generatedImageFood(payload).subscribe((data) => {
-      this.detailFood.image = data["result"].url;
-    });
+    // this.foodService.generatedImageFood(payload).subscribe((data) => {
+    //   this.detailFood.image = data["result"].url;
+    // });
   }
 }

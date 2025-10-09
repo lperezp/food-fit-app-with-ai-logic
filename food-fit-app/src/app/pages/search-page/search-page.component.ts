@@ -1,6 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { HeaderComponent } from "../../components/header/header.component";
-import { FoodService } from '../../services/food.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -12,7 +11,6 @@ import { Router } from '@angular/router';
 })
 export class SearchPageComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
-  private foodService = inject(FoodService);
   private router = inject(Router);
 
   formSearch: FormGroup = this.formBuilder.group({
@@ -38,11 +36,11 @@ export class SearchPageComponent implements OnInit {
         quantity_people: 2
       }
     }
-    this.foodService.getRecipesByIngredient(payload).subscribe((data) => {
-      localStorage.setItem('LIST_FOOD_BY_INGREDIENT', JSON.stringify(data["result"]));
-      this.listFood = data["result"];
-      this.isLoading = false;
-    });
+    // this.foodService.getRecipesByIngredient(payload).subscribe((data) => {
+    //   localStorage.setItem('LIST_FOOD_BY_INGREDIENT', JSON.stringify(data["result"]));
+    //   this.listFood = data["result"];
+    //   this.isLoading = false;
+    // });
   }
 
   openDetail(item) {
