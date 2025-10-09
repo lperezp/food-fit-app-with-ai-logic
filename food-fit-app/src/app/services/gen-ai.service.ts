@@ -56,8 +56,7 @@ export class GenAiService {
   async generatedRecipes() {
     const result = await model.generateContent(LIST_FOOD_SUGGESTION_PROMPT);
     const response = result.response;
-    const text = response.text();
-    const recipesData = JSON.parse(text);
+    const recipesData = JSON.parse(response.text());
     return recipesData;
   }
 }

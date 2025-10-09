@@ -30,7 +30,6 @@ export class ListFoodPageComponent implements OnInit {
     this.listFood = [];
 
     this.genAI.generatedRecipes().then((data) => {
-      console.log('SALIDA', data);
       this.isLoading = false;
       this.listFood = data['recipes'];
       localStorage.setItem('LIST_FOOD', JSON.stringify(this.listFood));
