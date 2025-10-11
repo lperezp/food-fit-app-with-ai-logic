@@ -15,7 +15,7 @@
     &__image {
         width: 100%;
         max-width: 400px;
-        height: 300px;
+        aspect-ratio: 1/1;
         margin: 0 auto 4px auto;
         background-size: cover;
         background-position: center;

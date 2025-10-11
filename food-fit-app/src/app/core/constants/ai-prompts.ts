@@ -18,3 +18,7 @@ Las recetas deben ser saludables y equilibradas. Además que sean para ${payload
 Las recetas tiene que estar en español.
 La descripción de cada receta debe detallar el plato y si está inspirado en alguna cocina.
 `;
+
+export const GENERATE_IMAGE_FOOD_PROMPT = (name: string) => `
+Genera una imagen de un plato de comida saludable llamado ${name}, en formato JSON con la propiedad url que contenga la URL de la imagen generada.
+`;

@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { HeaderComponent } from "../../components/header/header.component";
+import { GenAiService } from '../../services/gen-ai.service';
 
 @Component({
   selector: 'app-detail-food-page',
@@ -9,6 +10,8 @@ import { HeaderComponent } from "../../components/header/header.component";
 })
 export class DetailFoodPageComponent {
   detailFood;
+  private genAI = inject(GenAiService);
+
   constructor() {
     const detailFoodString = localStorage.getItem('DETAIL_FOOD');
     this.detailFood = detailFoodString ? JSON.parse(detailFoodString) : null;
@@ -17,13 +20,11 @@ export class DetailFoodPageComponent {
 
   generatedImageFood(name) {
     const payload = {
-      data: {
-        food: name
-      }
+      food: name
     }
 
-    // this.foodService.generatedImageFood(payload).subscribe((data) => {
-    //   this.detailFood.image = data["result"].url;
-    // });
+    this.genAI.generatedImageFood(payload).then((data) => {
+      this.detailFood.image = data.bytesBase64Encoded;
+    });
   }
 }
