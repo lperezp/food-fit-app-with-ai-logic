@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { HeaderComponent } from "../../components/header/header.component";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { GenAiService } from '../../services/gen-ai.service';
 
 @Component({
   selector: 'app-search-page',
@@ -12,6 +13,7 @@ import { Router } from '@angular/router';
 export class SearchPageComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
+  private genAI = inject(GenAiService);
 
   formSearch: FormGroup = this.formBuilder.group({
     ingredient: ['', Validators.required]
@@ -31,16 +33,15 @@ export class SearchPageComponent implements OnInit {
     this.isLoading = true;
     this.listFood = [];
     const payload = {
-      data: {
-        ingredient: this.formSearch.value.ingredient,
-        quantity_people: 2
-      }
+      ingredient: this.formSearch.value.ingredient,
+      quantity_people: 2
     }
-    // this.foodService.getRecipesByIngredient(payload).subscribe((data) => {
-    //   localStorage.setItem('LIST_FOOD_BY_INGREDIENT', JSON.stringify(data["result"]));
-    //   this.listFood = data["result"];
-    //   this.isLoading = false;
-    // });
+
+    this.genAI.getRecipesByIngredients(payload).then((data) => {
+      localStorage.setItem('LIST_FOOD_BY_INGREDIENT', JSON.stringify(data["result"]));
+      this.listFood = data["recipes"];
+      this.isLoading = false;
+    });
   }
 
   openDetail(item) {

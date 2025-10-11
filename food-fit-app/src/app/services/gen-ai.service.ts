@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { initializeApp } from "firebase/app";
 import { getAI, getGenerativeModel, Schema, VertexAIBackend } from "firebase/ai";
 import { environment } from '../../environments/environment';
-import { LIST_FOOD_SUGGESTION_PROMPT } from '../core/constants/ai-prompts';
+import { LIST_FOOD_BY_INGREDIENTS_PROMPT, LIST_FOOD_SUGGESTION_PROMPT } from '../core/constants/ai-prompts';
 
 const firebaseApp = initializeApp(environment.firebaseConfig);
 const ai = getAI(firebaseApp, { backend: new VertexAIBackend() });
@@ -55,6 +55,13 @@ export class GenAiService {
 
   async generatedRecipes() {
     const result = await model.generateContent(LIST_FOOD_SUGGESTION_PROMPT);
+    const response = result.response;
+    const recipesData = JSON.parse(response.text());
+    return recipesData;
+  }
+
+  async getRecipesByIngredients(payload: { ingredient: string; quantity_people: number }) {
+    const result = await model.generateContent(LIST_FOOD_BY_INGREDIENTS_PROMPT(payload));
     const response = result.response;
     const recipesData = JSON.parse(response.text());
     return recipesData;

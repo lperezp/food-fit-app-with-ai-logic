@@ -5,5 +5,16 @@ En la matriz del las recetas, coloque las recetas como lo haría un recetario de
 Dé a cada receta una descripción únicos.
 Las recetas deben ser saludables y equilibradas. Además que sean para 4 personas.
 Las recetas tiene que estar en español.
-Limite las descripciones de las recetas a 7 palabras.
+La descripción de cada receta debe detallar el plato y si está inspirado en alguna cocina.
+`;
+
+export const LIST_FOOD_BY_INGREDIENTS_PROMPT = (payload: { ingredient: string; quantity_people: number }) => `
+Eres el asistente de inteligencia artificial más conocedor del rubro gastronómico.
+Genere un lista de 4 recetas para una persona que quiere alimentarse de forma saludable.
+Las recetas deben incluir los siguientes ingredientes: ${payload.ingredient}.
+En la matriz del las recetas, coloque las recetas como lo haría un recetario de comida.
+Dé a cada receta una descripción únicos.
+Las recetas deben ser saludables y equilibradas. Además que sean para ${payload.quantity_people} personas.
+Las recetas tiene que estar en español.
+La descripción de cada receta debe detallar el plato y si está inspirado en alguna cocina.
 `;
