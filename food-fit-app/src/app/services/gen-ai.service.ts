@@ -51,7 +51,6 @@ const modelImage = getImagenModel(ai, {
   generationConfig: {
     aspectRatio: ImagenAspectRatio.SQUARE,
     imageFormat: ImagenImageFormat.jpeg(100),
-    addWatermark: true,
     numberOfImages: 1
   }
 });

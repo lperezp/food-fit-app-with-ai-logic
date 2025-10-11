@@ -38,7 +38,7 @@ export class SearchPageComponent implements OnInit {
     }
 
     this.genAI.getRecipesByIngredients(payload).then((data) => {
-      localStorage.setItem('LIST_FOOD_BY_INGREDIENT', JSON.stringify(data["result"]));
+      localStorage.setItem('LIST_FOOD_BY_INGREDIENT', JSON.stringify(data["recipes"]));
       this.listFood = data["recipes"];
       this.isLoading = false;
     });
