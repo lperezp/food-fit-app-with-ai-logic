@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from "firebase/app";
-import { getAI, getGenerativeModel, getImagenModel, ImagenAspectRatio, ImagenImageFormat, Schema, VertexAIBackend } from "firebase/ai";
+import { getAI, getGenerativeModel, getImagenModel, ImagenAspectRatio, ImagenImageFormat, InferenceMode, Schema, VertexAIBackend } from "firebase/ai";
 import { environment } from '../../environments/environment';
 import { GENERATE_IMAGE_FOOD_PROMPT, LIST_FOOD_BY_INGREDIENTS_PROMPT, LIST_FOOD_SUGGESTION_PROMPT } from '../core/constants/ai-prompts';
 
@@ -39,10 +39,18 @@ const outputFoodItemSchema = Schema.object({
 });
 
 const model = getGenerativeModel(ai, {
-  model: environment.modelGemini,
-  generationConfig: {
-    responseMimeType: "application/json",
-    responseSchema: outputFoodItemSchema
+  mode: InferenceMode.PREFER_ON_DEVICE,
+  inCloudParams: {
+    model: environment.modelGemini,
+    generationConfig: {
+      responseMimeType: "application/json",
+      responseSchema: outputFoodItemSchema
+    }
+  },
+  onDeviceParams: {
+    promptOptions: {
+      responseConstraint: outputFoodItemSchema
+    }
   }
 });
 
