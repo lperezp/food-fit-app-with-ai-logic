@@ -1,63 +1,94 @@
-# Food Fit App in Genkit with Angular
+# Food Fit App with Firebase AI Logic & Angular
 
 ![Cover Food Fit App](cover.png "Cover Food Fit App")
 
-This is a Food Fit demo that uses Firebase Genkit to generate healthy recipes. This project uses [Angular](https://angular.dev/) for the frontend and [Genkit](https://firebase.google.com/docs/genkit) deployed on [Cloud Functions](https://firebase.google.com/docs/functions). For more information on how this app was created, check out this [blog post](https://lperezp.medium.com/food-fit-tu-partner-para-tener-una-alimentaci%C3%B3n-saludable-con-genkit-140d7cd25a22).
+This is a Food Fit demo that uses Firebase AI Logic to generate healthy Peruvian recipes. This project uses [Angular](https://angular.dev/) for the frontend and [Firebase AI Logic](https://firebase.google.com/docs/ai-logic) with Gemini models for AI-powered content generation. The app specializes in creating personalized healthy recipes with nutritional information and AI-generated food images.
+
+# Features
+
+- 🍽️ **AI-Powered Recipe Generation**: Get personalized healthy Peruvian recipe suggestions
+- 🥬 **Ingredient-Based Search**: Find recipes based on specific ingredients you have
+- 🖼️ **AI Image Generation**: Visualize dishes with AI-generated food images
+- 📱 **Responsive Design**: Optimized for both mobile and desktop devices
+- 📊 **Nutritional Information**: Complete nutritional breakdown for each recipe
 
 # Installation
 
 To set up the project, follow these steps:
 
-## Main application
+## Prerequisites
+
+- Node.js (version 18 or higher)
+- Angular CLI (`npm install -g @angular/cli`)
+- Firebase account with AI Logic access
+
+## Application Setup
 
 Go to the `food-fit-app` folder and run the following command:
 
-```
+```bash
 cd food-fit-app
 npm install
 ```
 
-## Cloud Functions
-
-Go to the server/functions folder and run the same command:
-
-```
-cd server/functions
-npm install
-```
+Configure your Firebase environment variables in `src/environments/`:
+- `environment.ts` (development)
+- `environment.dev.ts` (production)
 
 # Usage
 
-## Main application
+## Development Server
 
 Go to the `food-fit-app` folder and run the following command:
 
-```
+```bash
 cd food-fit-app
 ng serve
 ```
 
 Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
+## Building for Production
 
-## Cloud Functions
+To build the project for production:
 
-Follow the [guide](https://firebase.google.com/docs/genkit/cloud-run#make_api_credentials_available_to_deployed_flows) to generate the API KEY for deployment. Go to the server/functions folder and run the same command:
-
-```
-cd server/functions
-npm run serve
-```
-
-# Run Genkit only
-
-To run Genkit only, replace the `GOOGLE_GENAI_API_KEY` in the `.env` file and run the following command:
-
-```
-npm run genkit:dev
+```bash
+cd food-fit-app
+ng build
 ```
 
-Generate an API key for the Gemini API using [Google AI Studio](https://aistudio.google.com/app/apikey).
+## Deployment
+
+Deploy to Firebase Hosting:
+
+```bash
+cd food-fit-app
+npm run deploy
+```
+
+# Firebase AI Logic Integration
+
+This application leverages Firebase AI Logic with the following models:
+
+## AI Models Used
+
+- **Gemini**: For recipe generation and structured content creation
+- **Imagen 4**: For AI-generated food images
+
+## AI Features
+
+- **Structured Recipe Generation**: Recipes are generated with a defined JSON schema including:
+  - Recipe name and description
+  - Ingredient lists
+  - Nutritional information (calories, carbohydrates, fats, etc.)
+  - Preparation time and difficulty level
+  - Step-by-step instructions
+
+- **Hybrid Processing**: 
+  - Preference for on-device processing when available
+  - Cloud-based fallback with Gemini models
+
+- **Image Generation**: Creates appetizing food images for each recipe using Imagen models
 
 # Contributing
 
