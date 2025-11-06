@@ -1,11 +1,12 @@
+
 export const environment = {
     firebaseConfig: {
-        apiKey: "AIzaSyBEv4xmxTp0uNTp-K3QvQUxEAjQza2PXGg",
-        authDomain: "food-fit-2024.firebaseapp.com",
-        projectId: "food-fit-2024",
-        storageBucket: "food-fit-2024.firebasestorage.app",
-        messagingSenderId: "492381764039",
-        appId: "1:492381764039:web:64398ee124b481c61401e2"
+        apiKey: "XXXXX-XXXXXXXXX-XXXXXX-XXXXXX",
+        authDomain: "XXXXXXXXXXXX.firebaseapp.com",
+        projectId: "xxxxxxxxxxxx",
+        storageBucket: "XXXXXXXXXXXX.appspot.com",
+        messagingSenderId: "XXXXXXXXXXXX",
+        appId: "1:XXXXXXXXXXXX:web:XXXXXXXXXXXX"
     },
     modelGemini: 'gemini-2.5-flash-lite',
     modelImageGemini: '	imagen-4.0-generate-001'
