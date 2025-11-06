@@ -1,59 +1,134 @@
 # FoodFitApp
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.2.
+Una aplicación web desarrollada con Angular 19 que utiliza inteligencia artificial para generar recetas peruanas saludables y balanceadas. La aplicación aprovecha Firebase AI Logic con modelos Gemini para la generación de contenido y creación de imágenes de comida.
 
-## Development server
+## Características
 
-To start a local development server, run:
+- 🍽️ **Generación de Recetas**: Obtén sugerencias de recetas peruanas saludables usando IA
+- 🥬 **Búsqueda por Ingredientes**: Encuentra recetas basadas en ingredientes específicos
+- 🖼️ **Generación de Imágenes**: Visualiza platos con imágenes generadas por IA
+- 📱 **Diseño Responsive**: Interfaz optimizada para dispositivos móviles y desktop
+
+## Tecnologías Utilizadas
+
+- **Frontend**: Angular 19
+- **IA y Backend**: Firebase AI Logic
+  - Gemini para generación de texto y recetas
+  - Imagen 4 (Gemini) para generación de imágenes de comida
+- **Hosting**: Firebase Hosting
+
+## Servidor de Desarrollo
+
+Para iniciar el servidor de desarrollo local, ejecuta:
 
 ```bash
-ng serve
+ng serve -o
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Una vez que el servidor esté ejecutándose, abre tu navegador y navega a `http://localhost:4200/`. La aplicación se recargará automáticamente cuando modifiques cualquier archivo fuente.
 
-## Code scaffolding
+## Configuración del Proyecto
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Prerrequisitos
 
+- Node.js (versión 18 o superior)
+- Angular CLI (`npm install -g @angular/cli`)
+- Cuenta de Firebase con acceso a AI Logic
+
+### Instalación
+
+1. Clona el repositorio:
 ```bash
-ng generate component component-name
+git clone https://github.com/lperezp/food-fit-app.git
+cd food-fit-app
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
+2. Instala las dependencias:
 ```bash
-ng generate --help
+npm install
 ```
 
-## Building
+3. Configura las variables de entorno de Firebase en `src/environments/`:
+   - `environment.ts` (desarrollo)
+   - `environment.dev.ts` (producción)
 
-To build the project run:
+### Estructura del Proyecto
+
+```
+src/
+├── app/
+│   ├── components/          # Componentes reutilizables
+│   │   └── header/         # Header de navegación
+│   ├── core/
+│   │   └── constants/      # Prompts de IA y constantes
+│   ├── pages/              # Páginas principales
+│   │   ├── home-page/      # Página de inicio
+│   │   ├── list-food-page/ # Lista de recetas generadas
+│   │   ├── search-page/    # Búsqueda por ingredientes
+│   │   └── detail-food-page/ # Detalle de receta individual
+│   └── services/
+│       └── gen-ai.service.ts # Servicio de integración con Firebase AI Logic
+```
+
+## Construcción
+
+Para construir el proyecto ejecuta:
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Esto compilará tu proyecto y almacenará los artefactos de construcción en el directorio `dist/`. Por defecto, la construcción de producción optimiza tu aplicación para rendimiento y velocidad.
 
-## Running unit tests
+## Despliegue
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+Para desplegar en Firebase Hosting:
 
 ```bash
-ng e2e
+npm run deploy
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Este comando construye la aplicación y la despliega automáticamente a Firebase Hosting.
 
-## Additional Resources
+## Firebase AI Logic
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Esta aplicación utiliza Firebase AI Logic que proporciona:
+
+### Modelos de IA Utilizados
+
+- **Gemini**: Para generación de recetas y contenido de texto
+- **Imagen 4 (Gemini)**: Para generación de imágenes de platos de comida
+
+### Características de IA
+
+- **Generación Estructurada**: Las recetas se generan con un esquema JSON definido que incluye:
+  - Nombre y descripción del plato
+  - Lista de ingredientes
+  - Información nutricional (calorías, carbohidratos, grasas, etc.)
+  - Tiempo de preparación y nivel de dificultad
+  - Instrucciones paso a paso
+
+- **Procesamiento Híbrido**: 
+  - Preferencia por procesamiento en dispositivo cuando está disponible
+  - Fallback a procesamiento en la nube con modelos Gemini
+
+## Scripts Disponibles
+
+- `npm start` - Inicia el servidor de desarrollo
+- `npm run build` - Construye la aplicación para producción
+- `npm run watch` - Construye en modo desarrollo con recarga automática
+- `npm run deploy` - Construye y despliega en Firebase Hosting
+
+## Recursos Adicionales
+
+- [Documentación de Angular CLI](https://angular.dev/tools/cli)
+- [Firebase AI Logic](https://firebase.google.com/docs/ai-logic)
+- [Gemini AI](https://ai.google.dev/docs)
+
+## Contribución
+
+Si deseas contribuir al proyecto, por favor revisa las [pautas de contribución](../CONTRIBUTING.md).
+
+## Licencia
+
+Este proyecto está bajo la licencia especificada en el archivo [LICENSE](../LICENSE).
