@@ -1,42 +1,12 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from "firebase/app";
-import { getAI, getGenerativeModel, getImagenModel, ImagenAspectRatio, ImagenImageFormat, InferenceMode, Schema, VertexAIBackend } from "firebase/ai";
+import { getAI, getGenerativeModel, getImagenModel, ImagenAspectRatio, ImagenImageFormat, InferenceMode, VertexAIBackend } from "firebase/ai";
 import { environment } from '../../environments/environment';
 import { GENERATE_IMAGE_FOOD_PROMPT, LIST_FOOD_BY_INGREDIENTS_PROMPT, LIST_FOOD_SUGGESTION_PROMPT } from '../core/constants/ai-prompts';
+import { outputFoodItemSchema } from '../schemas/outputFoodItemSchema.schema';
 
 const firebaseApp = initializeApp(environment.firebaseConfig);
 const ai = getAI(firebaseApp, { backend: new VertexAIBackend() });
-
-const outputFoodItemSchema = Schema.object({
-  properties: {
-    recipes: Schema.array({
-      items: Schema.object({
-        properties: {
-          name: Schema.string(),
-          description: Schema.string(),
-          ingredients: Schema.array({
-            items: Schema.string()
-          }),
-          nutritional_information: Schema.object({
-            properties: {
-              cal: Schema.number(),
-              carbohydrates: Schema.number(),
-              fats: Schema.number(),
-              sodium: Schema.number(),
-              cholesterol: Schema.number(),
-              proteins: Schema.number()
-            }
-          }),
-          preparation_time: Schema.string(),
-          level: Schema.string(),
-          preparation: Schema.array({
-            items: Schema.string()
-          })
-        }
-      })
-    })
-  }
-});
 
 const model = getGenerativeModel(ai, {
   mode: InferenceMode.PREFER_ON_DEVICE,
