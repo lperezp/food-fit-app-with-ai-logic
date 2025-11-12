@@ -9,5 +9,6 @@ export const environment = {
         appId: "1:XXXXXXXXXXXX:web:XXXXXXXXXXXX"
     },
     modelGemini: 'gemini-2.5-flash-lite',
-    modelImageGemini: '	imagen-4.0-generate-001'
+    modelImageGemini: '	imagen-4.0-generate-001',
+    recaptchaEnterpriseSiteKey: "xxxxxxxxxxxx"
 };
