@@ -1,11 +1,20 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from "firebase/app";
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { getAI, getGenerativeModel, getImagenModel, ImagenAspectRatio, ImagenImageFormat, InferenceMode, VertexAIBackend } from "firebase/ai";
 import { environment } from '../../environments/environment';
 import { GENERATE_IMAGE_FOOD_PROMPT, LIST_FOOD_BY_INGREDIENTS_PROMPT, LIST_FOOD_SUGGESTION_PROMPT } from '../core/constants/ai-prompts';
 import { outputFoodItemSchema } from '../schemas/outputFoodItemSchema.schema';
 
 const firebaseApp = initializeApp(environment.firebaseConfig);
+
+// Create a ReCaptchaEnterpriseProvider instance using your reCAPTCHA Enterprise
+// site key and pass it to initializeAppCheck().
+const appCheck = initializeAppCheck(firebaseApp, {
+  provider: new ReCaptchaEnterpriseProvider(environment.recaptchaEnterpriseSiteKey),
+  isTokenAutoRefreshEnabled: true // Set to true to allow auto-refresh.
+});
+
 const ai = getAI(firebaseApp, { backend: new VertexAIBackend() });
 
 const model = getGenerativeModel(ai, {
