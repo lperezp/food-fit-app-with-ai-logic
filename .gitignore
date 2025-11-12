@@ -1,1 +1,2 @@
 food-fit-app/.firebase
+food-fit-app/src/environments/*.ts
