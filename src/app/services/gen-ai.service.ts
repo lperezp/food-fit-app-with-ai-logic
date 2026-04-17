@@ -8,13 +8,6 @@ import { outputFoodItemSchema } from '../schemas/outputFoodItemSchema.schema';
 
 const firebaseApp = initializeApp(environment.firebaseConfig);
 
-// Create a ReCaptchaEnterpriseProvider instance using your reCAPTCHA Enterprise
-// site key and pass it to initializeAppCheck().
-const appCheck = initializeAppCheck(firebaseApp, {
-  provider: new ReCaptchaEnterpriseProvider(environment.recaptchaEnterpriseSiteKey),
-  isTokenAutoRefreshEnabled: true // Set to true to allow auto-refresh.
-});
-
 const ai = getAI(firebaseApp, { backend: new VertexAIBackend() });
 
 const model = getGenerativeModel(ai, {
