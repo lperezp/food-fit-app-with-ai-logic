@@ -14,9 +14,8 @@ const model = getGenerativeModel(ai, {
     model: environment.modelGemini,
     generationConfig: {
       responseMimeType: "application/json",
-      responseSchema: outputFoodItemSchema
-    }
-});
+      responseSchema: outputFoodItemSchema 
+}});
 
 const modelImage = getImagenModel(ai, {
   model: environment.modelImageGemini,
@@ -35,15 +34,7 @@ export class GenAiService {
   constructor() { }
 
   async generatedRecipes() {
-    const result = await model.generateContent(`
-Eres el asistente de inteligencia artificial más conocedor del rubro gastronómico en el Perú.
-Genere un lista de 4 recetas peruanas o similares para una persona que quiere alimentarse de forma saludable.
-En la matriz del las recetas, coloque las recetas como lo haría un recetario de comida.
-Dé a cada receta una descripción únicos.
-Las recetas deben ser saludables y equilibradas. Además que sean para 4 personas.
-Las recetas tiene que estar en español.
-La descripción de cada receta debe detallar el plato y si está inspirado en alguna cocina.
-`);
+    const result = await model.generateContent(LIST_FOOD_SUGGESTION_PROMPT);
     const response = result.response;
     const recipesData = JSON.parse(response.text());
     return recipesData;
