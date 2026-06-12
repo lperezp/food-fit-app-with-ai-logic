@@ -1,0 +1,17 @@
+<app-header />
+<div class="container">
+    <form class="container__form" [formGroup]="formChat">
+        <textarea class="container__form--input" formControlName="query" aria-label="Escribe tu duda"
+            placeholder="Escribe tu duda" rows="3"></textarea>
+        <button class="container__form--btn" type="button" [disabled]="!formChat.valid || isLoading"
+            (click)="askChef()">
+            Consultar a Gemini Nano
+        </button>
+    </form>
+
+    @if(responseChat.length > 0){
+    <section class="container__response">
+        <p>{{responseChat}}</p>
+    </section>
+    }
+</div>

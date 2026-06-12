@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from "firebase/app";
-import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { getAI, getGenerativeModel, getImagenModel, ImagenAspectRatio, ImagenImageFormat, InferenceMode, VertexAIBackend } from "firebase/ai";
 import { environment } from '../../environments/environment';
 import { GENERATE_IMAGE_FOOD_PROMPT, LIST_FOOD_BY_INGREDIENTS_PROMPT, LIST_FOOD_SUGGESTION_PROMPT } from '../core/constants/ai-prompts';
@@ -11,11 +10,16 @@ const firebaseApp = initializeApp(environment.firebaseConfig);
 const ai = getAI(firebaseApp, { backend: new VertexAIBackend() });
 
 const model = getGenerativeModel(ai, {
-    model: environment.modelGemini,
-    generationConfig: {
-      responseMimeType: "application/json",
-      responseSchema: outputFoodItemSchema 
-}});
+  mode: InferenceMode.PREFER_ON_DEVICE,
+  generationConfig: {
+    responseMimeType: "application/json",
+    responseSchema: outputFoodItemSchema
+  }
+});
+
+model.initializeDeviceModel((val) =>
+  console.log(`Download progress: ${Math.round(val * 10000) / 100}%`)
+);
 
 const modelImage = getImagenModel(ai, {
   model: environment.modelImageGemini,
@@ -31,7 +35,15 @@ const modelImage = getImagenModel(ai, {
 })
 export class GenAiService {
 
-  constructor() { }
+  async askChef(query) {
+    console.log("query", query)
+    const result = await model.generateContent(query);
+    console.log("result", result);
+
+    const response = result.response;
+    console.log(response.text())
+    return response.text()
+  }
 
   async generatedRecipes() {
     const result = await model.generateContent(LIST_FOOD_SUGGESTION_PROMPT);

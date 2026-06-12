@@ -1,0 +1,42 @@
+.container {
+    padding: 32px 24px;
+
+    &__form {
+        width: 100%;
+        margin-bottom: 36px;
+
+        &--input {
+            width: 100%;
+            margin-bottom: 12px;
+            height: 80px;
+            border-radius: 12px;
+            background-color: #F5F5F5;
+            color: #141516;
+            padding: 12px;
+            border: none;
+            outline: none;
+        }
+
+        &--btn {
+            width: 100%;
+            height: 44px;
+            border: none;
+            background-color: #141516;
+            border-radius: 12px;
+            color: #ffffff;
+
+            // add style disabled
+            &:disabled {
+                opacity: 0.7;
+            }
+        }
+    }
+
+    &__response {
+        background-color: #e3e3e3;
+        border-radius: 10px;
+        padding: 20px;
+        max-height: 400px;
+        overflow: auto;
+    }
+}
