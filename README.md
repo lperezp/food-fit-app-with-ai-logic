@@ -2,11 +2,11 @@
 
 ![Cover Food Fit App](cover.png "Cover Food Fit App")
 
-This is a Food Fit demo that uses Firebase AI Logic to generate healthy Peruvian recipes. This project uses [Angular](https://angular.dev/) for the frontend and [Firebase AI Logic](https://firebase.google.com/docs/ai-logic) with Gemini models for AI-powered content generation. The app specializes in creating personalized healthy recipes with nutritional information and AI-generated food images.
+This is a Food Fit demo that uses Firebase AI Logic to generate healthy  recipes. This project uses [Angular](https://angular.dev/) for the frontend and [Firebase AI Logic](https://firebase.google.com/docs/ai-logic) with Gemini models for AI-powered content generation. The app specializes in creating personalized healthy recipes with nutritional information and AI-generated food images.
 
 # Features
 
-- 🍽️ **AI-Powered Recipe Generation**: Get personalized healthy Peruvian recipe suggestions
+- 🍽️ **AI-Powered Recipe Generation**: Get personalized healthy  recipe suggestions
 - 🥬 **Ingredient-Based Search**: Find recipes based on specific ingredients you have
 - 🖼️ **AI Image Generation**: Visualize dishes with AI-generated food images
 - 📱 **Responsive Design**: Optimized for both mobile and desktop devices
