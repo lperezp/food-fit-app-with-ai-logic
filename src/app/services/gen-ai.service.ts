@@ -38,9 +38,6 @@ const liveModel = getLiveGenerativeModel(ai, {
 
 const modelImage = getGenerativeModel(ai, {
   model: environment.modelImageGemini,
-  generationConfig: {
-    responseModalities: [ResponseModality.IMAGE],
-  }
 });
 
 @Injectable({
