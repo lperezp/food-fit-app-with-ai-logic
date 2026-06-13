@@ -4,8 +4,11 @@
         <textarea class="container__form--input" formControlName="query" aria-label="Escribe tu duda"
             placeholder="Escribe tu duda" rows="3"></textarea>
         <button class="container__form--btn" type="button" [disabled]="!formChat.valid || isLoading"
-            (click)="askChef()">
+            (click)="askGemini()">
             Consultar a Gemini Nano
+        </button>
+        <button class="container__form--btn" type="button" (click)="!isEnbleVoice ? talkGemini() : stopTalkGemini()">
+            {{!isEnbleVoice ? 'Hablar con Gemini' : 'Detener conversación con Gemini'}}
         </button>
     </form>
 

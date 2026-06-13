@@ -18,14 +18,29 @@ export class ChatPageComponent {
   });
   isLoading = false;
   responseChat = ''
+  isEnbleVoice = false;
 
-  askChef() {
+  askGemini() {
     this.isLoading = true;
-    this.genAI.askChef(this.formChat.value.query).then((data) => {
+    this.genAI.askGemini(this.formChat.value.query).then((data) => {
       this.responseChat = data
       this.isLoading = false
       this.formChat.reset()
     })
   }
 
+  talkGemini() {
+    this.isEnbleVoice = true;
+    this.genAI.talkGemini().catch((error) => {
+      console.error("Error starting audio conversation with Gemini Live", error);
+    });
+  }
+
+  stopTalkGemini() {
+    this.isEnbleVoice = false;
+    this.genAI.stopTalkGemini().catch((error) => {
+      console.error("Error stopping audio conversation with Gemini Live", error);
+    });
+
+  }
 }

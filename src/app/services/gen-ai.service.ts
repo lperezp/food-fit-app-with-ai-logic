@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from "firebase/app";
-import { getAI, getGenerativeModel, getImagenModel, ImagenAspectRatio, ImagenImageFormat, InferenceMode, VertexAIBackend } from "firebase/ai";
+import { getAI, getGenerativeModel, getImagenModel, getLiveGenerativeModel, ImagenAspectRatio, ImagenImageFormat, InferenceMode, ResponseModality, startAudioConversation, VertexAIBackend } from "firebase/ai";
 import { environment } from '../../environments/environment';
 import { GENERATE_IMAGE_FOOD_PROMPT, LIST_FOOD_BY_INGREDIENTS_PROMPT, LIST_FOOD_SUGGESTION_PROMPT } from '../core/constants/ai-prompts';
 import { outputFoodItemSchema } from '../schemas/outputFoodItemSchema.schema';
@@ -11,6 +11,9 @@ const ai = getAI(firebaseApp, { backend: new VertexAIBackend() });
 
 const model = getGenerativeModel(ai, {
   mode: InferenceMode.PREFER_ON_DEVICE,
+  inCloudParams: {
+    model: environment.modelGemini,
+  },
   generationConfig: {
     responseMimeType: "application/json",
     responseSchema: outputFoodItemSchema
@@ -20,6 +23,13 @@ const model = getGenerativeModel(ai, {
 model.initializeDeviceModel((val) =>
   console.log(`Download progress: ${Math.round(val * 10000) / 100}%`)
 );
+
+const liveModel = getLiveGenerativeModel(ai, {
+  model: environment.modelGeminiLive,
+  generationConfig: {
+    responseModalities: [ResponseModality.AUDIO],
+  },
+});
 
 const modelImage = getImagenModel(ai, {
   model: environment.modelImageGemini,
@@ -35,15 +45,30 @@ const modelImage = getImagenModel(ai, {
 })
 export class GenAiService {
 
-  async askChef(query) {
-    console.log("query", query)
-    const result = await model.generateContent(query);
-    console.log("result", result);
+  session = null;
+  audioConversationController = null;
 
+  async askGemini(query) {
+    const result = await model.generateContent(query);
     const response = result.response;
-    console.log(response.text())
     return response.text()
   }
+
+  async talkGemini() {
+    if (!this.session) {
+      this.session = await liveModel.connect();
+    }
+    this.audioConversationController = await startAudioConversation(this.session);
+  }
+
+  async stopTalkGemini() {
+    if (this.audioConversationController) {
+      await this.audioConversationController.stop();
+      this.audioConversationController = null;
+    }
+  }
+
+
 
   async generatedRecipes() {
     const result = await model.generateContent(LIST_FOOD_SUGGESTION_PROMPT);
