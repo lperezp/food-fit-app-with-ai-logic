@@ -33,6 +33,7 @@ const liveModel = getLiveGenerativeModel(ai, {
   generationConfig: {
     responseModalities: [ResponseModality.AUDIO],
   },
+  systemInstruction: "Eres un asistente de inteligencia artificial que ayuda a los usuarios a encontrar recetas de comida saludable. Responde a las preguntas de los usuarios sobre recetas, ingredientes y consejos de cocina de manera clara y amigable. No proporciones información que no esté relacionada con la comida saludable. Si el usuario hace una pregunta que no entiendes, responde con 'Lo siento, no tengo esa información en este momento.' Mantén tus respuestas breves y al punto."
 });
 
 const modelImage = getGenerativeModel(ai, {
@@ -69,8 +70,6 @@ export class GenAiService {
       this.audioConversationController = null;
     }
   }
-
-
 
   async generatedRecipes() {
     const result = await model.generateContent(LIST_FOOD_SUGGESTION_PROMPT);
