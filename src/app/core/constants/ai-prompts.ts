@@ -20,5 +20,5 @@ La descripción de cada receta debe detallar el plato y si está inspirado en al
 `;
 
 export const GENERATE_IMAGE_FOOD_PROMPT = (name: string) => `
-Genera una imagen de un plato de comida saludable llamado ${name}, en formato JSON con la propiedad url que contenga la URL de la imagen generada.
+Genera una imagen realista y apetitosa de un plato de comida saludable llamado ${name}.
 `;

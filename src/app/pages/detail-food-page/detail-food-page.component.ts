@@ -24,7 +24,10 @@ export class DetailFoodPageComponent {
     }
 
     this.genAI.generatedImageFood(payload).then((data) => {
-      this.detailFood.image = data.bytesBase64Encoded;
+
+      this.detailFood.image = `${data.data}`;
+console.log(data);
+
     });
   }
 }

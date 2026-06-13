@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from "firebase/app";
-import { getAI, getGenerativeModel, getImagenModel, getLiveGenerativeModel, ImagenAspectRatio, ImagenImageFormat, InferenceMode, ResponseModality, startAudioConversation, VertexAIBackend } from "firebase/ai";
+import { getAI, getGenerativeModel, getLiveGenerativeModel, InferenceMode, ResponseModality, startAudioConversation, VertexAIBackend } from "firebase/ai";
 import { environment } from '../../environments/environment';
 import { GENERATE_IMAGE_FOOD_PROMPT, LIST_FOOD_BY_INGREDIENTS_PROMPT, LIST_FOOD_SUGGESTION_PROMPT } from '../core/constants/ai-prompts';
 import { outputFoodItemSchema } from '../schemas/outputFoodItemSchema.schema';
@@ -10,9 +10,13 @@ const firebaseApp = initializeApp(environment.firebaseConfig);
 const ai = getAI(firebaseApp, { backend: new VertexAIBackend() });
 
 const model = getGenerativeModel(ai, {
-  mode: InferenceMode.PREFER_ON_DEVICE,
+  mode: InferenceMode.PREFER_IN_CLOUD,
   inCloudParams: {
     model: environment.modelGemini,
+    generationConfig: {
+      responseMimeType: "application/json",
+      responseSchema: outputFoodItemSchema
+    }
   },
   generationConfig: {
     responseMimeType: "application/json",
@@ -31,12 +35,10 @@ const liveModel = getLiveGenerativeModel(ai, {
   },
 });
 
-const modelImage = getImagenModel(ai, {
+const modelImage = getGenerativeModel(ai, {
   model: environment.modelImageGemini,
   generationConfig: {
-    aspectRatio: ImagenAspectRatio.SQUARE,
-    imageFormat: ImagenImageFormat.jpeg(100),
-    numberOfImages: 1
+    responseModalities: [ResponseModality.IMAGE],
   }
 });
 
@@ -85,8 +87,11 @@ export class GenAiService {
   }
 
   async generatedImageFood(payload: { food: string }) {
-    const result = await modelImage.generateImages(GENERATE_IMAGE_FOOD_PROMPT(payload.food));
-    const image = result.images[0];
-    return image;
+    const result = await modelImage.generateContent(GENERATE_IMAGE_FOOD_PROMPT(payload.food));
+    const response = result.response;
+    const image = response.candidates?.[0]?.content?.parts?.find(
+      (part) => part.inlineData
+    );
+    return image?.inlineData;
   }
-}
+}     
