@@ -1,13 +1,30 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from "firebase/app";
-import { getAI, getGenerativeModel, getLiveGenerativeModel, InferenceMode, ResponseModality, startAudioConversation, VertexAIBackend } from "firebase/ai";
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
+import { getAI, getGenerativeModel, getLiveGenerativeModel, GoogleAIBackend, InferenceMode, ResponseModality, startAudioConversation } from "firebase/ai";
 import { environment } from '../../environments/environment';
 import { GENERATE_IMAGE_FOOD_PROMPT, LIST_FOOD_BY_INGREDIENTS_PROMPT, LIST_FOOD_SUGGESTION_PROMPT } from '../core/constants/ai-prompts';
 import { outputFoodItemSchema } from '../schemas/outputFoodItemSchema.schema';
 
+declare global {
+  var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
+}
+
+// Activa el modo de depuración para App Check en entorno local
+if (typeof window !== 'undefined' && (location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+  self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+}
+
 const firebaseApp = initializeApp(environment.firebaseConfig);
 
-const ai = getAI(firebaseApp, { backend: new VertexAIBackend() });
+if (typeof window !== 'undefined') {
+  initializeAppCheck(firebaseApp, {
+    provider: new ReCaptchaEnterpriseProvider(environment.recaptchaEnterpriseSiteKey),
+    isTokenAutoRefreshEnabled: true
+  });
+}
+
+const ai = getAI(firebaseApp, { backend: new GoogleAIBackend() });
 
 const model = getGenerativeModel(ai, {
   mode: InferenceMode.PREFER_IN_CLOUD,
