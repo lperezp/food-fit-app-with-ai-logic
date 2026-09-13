@@ -62,8 +62,8 @@ const modelImage = getGenerativeModel(ai, {
 })
 export class GenAiService {
 
-  session = null;
-  audioConversationController = null;
+  session: any = null;
+  audioConversationController: any = null;
 
   async askGemini(query) {
     const result = await model.generateContent(query);
@@ -72,16 +72,29 @@ export class GenAiService {
   }
 
   async talkGemini() {
-    if (!this.session) {
-      this.session = await liveModel.connect();
+    try {
+      if (!this.session || this.session.isClosed) {
+        this.session = await liveModel.connect();
+      }
+      this.audioConversationController = await startAudioConversation(this.session);
+    } catch (error) {
+      if (this.session) {
+        try { await this.session.close(); } catch {}
+        this.session = null;
+      }
+      this.audioConversationController = null;
+      throw error;
     }
-    this.audioConversationController = await startAudioConversation(this.session);
   }
 
   async stopTalkGemini() {
     if (this.audioConversationController) {
       await this.audioConversationController.stop();
       this.audioConversationController = null;
+    }
+    if (this.session) {
+      try { await this.session.close(); } catch {}
+      this.session = null;
     }
   }
 
