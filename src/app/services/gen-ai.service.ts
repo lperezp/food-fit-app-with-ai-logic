@@ -2,16 +2,19 @@ import { Injectable } from '@angular/core';
 import { initializeApp } from "firebase/app";
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { getAI, getGenerativeModel, getLiveGenerativeModel, GoogleAIBackend, InferenceMode, ResponseModality, startAudioConversation } from "firebase/ai";
+import { fetchAndActivate, getRemoteConfig, getValue } from "firebase/remote-config";
 import { environment } from '../../environments/environment';
-import { GENERATE_IMAGE_FOOD_PROMPT, LIST_FOOD_BY_INGREDIENTS_PROMPT, LIST_FOOD_SUGGESTION_PROMPT } from '../core/constants/ai-prompts';
+import { GENERATE_IMAGE_FOOD_PROMPT, LIST_FOOD_BY_INGREDIENTS_PROMPT, LIST_FOOD_SUGGESTION_PROMPT, LIVE_SYSTEM_INSTRUCTION_PROMPT } from '../core/constants/ai-prompts';
 import { outputFoodItemSchema } from '../schemas/outputFoodItemSchema.schema';
 
 declare global {
   var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
 }
 
+const isLocalhost = typeof window !== 'undefined' && (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
+
 // Activa el modo de depuración para App Check en entorno local
-if (typeof window !== 'undefined' && (location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+if (isLocalhost) {
   self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
 }
 
@@ -22,6 +25,11 @@ if (typeof window !== 'undefined') {
     provider: new ReCaptchaEnterpriseProvider(environment.recaptchaEnterpriseSiteKey),
     isTokenAutoRefreshEnabled: true
   });
+}
+
+const remoteConfig = typeof window !== 'undefined' ? getRemoteConfig(firebaseApp) : null;
+if (remoteConfig) {
+  remoteConfig.settings.minimumFetchIntervalMillis = isLocalhost ? 0 : 3600000;
 }
 
 const ai = getAI(firebaseApp, { backend: new GoogleAIBackend() });
@@ -45,14 +53,6 @@ model.initializeDeviceModel((val) =>
   console.log(`Download progress: ${Math.round(val * 10000) / 100}%`)
 );
 
-const liveModel = getLiveGenerativeModel(ai, {
-  model: environment.modelGeminiLive,
-  generationConfig: {
-    responseModalities: [ResponseModality.AUDIO],
-  },
-  systemInstruction: "Eres un asistente de inteligencia artificial que ayuda a los usuarios a encontrar recetas de comida saludable en Perú. Responde a las preguntas de los usuarios sobre recetas, ingredientes y consejos de cocina de manera clara y amigable. No proporciones información que no esté relacionada con la comida saludable. Si el usuario hace una pregunta que no entiendes, responde con 'Lo siento, no tengo esa información en este momento.' Mantén tus respuestas breves y al punto."
-});
-
 const modelImage = getGenerativeModel(ai, {
   model: environment.modelImageGemini,
 });
@@ -64,6 +64,22 @@ export class GenAiService {
 
   session: any = null;
   audioConversationController: any = null;
+  private remoteConfigReady: Promise<boolean> | null = remoteConfig
+    ? fetchAndActivate(remoteConfig).catch((err) => {
+        console.warn('No se pudo obtener Remote Config:', err);
+        return false;
+      })
+    : null;
+
+  async getCountry(): Promise<string> {
+    if (!remoteConfig) {
+      return '';
+    }
+    if (this.remoteConfigReady) {
+      await this.remoteConfigReady;
+    }
+    return getValue(remoteConfig, 'country').asString();
+  }
 
   async askGemini(query) {
     const result = await model.generateContent(query);
@@ -74,6 +90,14 @@ export class GenAiService {
   async talkGemini() {
     try {
       if (!this.session || this.session.isClosed) {
+        const country = await this.getCountry();
+        const liveModel = getLiveGenerativeModel(ai, {
+          model: environment.modelGeminiLive,
+          generationConfig: {
+            responseModalities: [ResponseModality.AUDIO],
+          },
+          systemInstruction: LIVE_SYSTEM_INSTRUCTION_PROMPT(country)
+        });
         this.session = await liveModel.connect();
       }
       this.audioConversationController = await startAudioConversation(this.session);
@@ -99,14 +123,16 @@ export class GenAiService {
   }
 
   async generatedRecipes() {
-    const result = await model.generateContent(LIST_FOOD_SUGGESTION_PROMPT);
+    const country = await this.getCountry();
+    const result = await model.generateContent(LIST_FOOD_SUGGESTION_PROMPT(country));
     const response = result.response;
     const recipesData = JSON.parse(response.text());
     return recipesData;
   }
 
   async getRecipesByIngredients(payload: { ingredient: string; quantity_people: number }) {
-    const result = await model.generateContent(LIST_FOOD_BY_INGREDIENTS_PROMPT(payload));
+    const country = await this.getCountry();
+    const result = await model.generateContent(LIST_FOOD_BY_INGREDIENTS_PROMPT({ ...payload, country }));
     const response = result.response;
     const recipesData = JSON.parse(response.text());
     return recipesData;
@@ -120,4 +146,4 @@ export class GenAiService {
     );
     return image?.inlineData;
   }
-}     
+}
